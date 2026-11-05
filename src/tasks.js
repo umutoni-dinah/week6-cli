@@ -22,4 +22,25 @@ function listTasks() {
   return loadTasks();
 }
 
-module.exports = { addTask, listTasks };
+function completeTask(id) {
+  const tasks = loadTasks();
+  const task = tasks.find((item) => item.id === Number(id));
+
+  if (!task) return null;
+
+  task.completed = true;
+  saveTasks(tasks);
+  return task;
+}
+
+function removeTask(id) {
+  const tasks = loadTasks();
+  const remainingTasks = tasks.filter((item) => item.id !== Number(id));
+
+  if (remainingTasks.length === tasks.length) return false;
+
+  saveTasks(remainingTasks);
+  return true;
+}
+
+module.exports = { addTask, listTasks, completeTask, removeTask };

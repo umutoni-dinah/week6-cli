@@ -1,7 +1,12 @@
 #!/usr/bin/env node
 
 const { parseArgs } = require("node:util");
-const { addTask, listTasks } = require("../src/tasks");
+const {
+  addTask,
+  listTasks,
+  completeTask,
+  removeTask,
+} = require("../src/tasks");
 
 const HELP = `
 Study Task Tracker
@@ -9,6 +14,9 @@ Study Task Tracker
 Usage:
   study add <description>
   study list
+    study done <id>       Mark a task complete
+  study remove <id>     Remove a task
+  study quote           Show a study quote
   study --help
 `;
 
@@ -31,7 +39,9 @@ function main() {
     const description = args.join(" ").trim();
 
     if (!description) {
-      console.error('Please provide a task description, e.g. study add "Read chapter 3".');
+      console.error(
+        'Please provide a task description, e.g. study add "Read chapter 3".',
+      );
       process.exitCode = 1;
       return;
     }
@@ -56,6 +66,31 @@ function main() {
     return;
   }
 
+  if (command === "done") {
+    const task = completeTask(args[0]);
+
+    if (!task) {
+      console.error(`Task not found: ${args[0]}`);
+      process.exitCode = 1;
+      return;
+    }
+
+    console.log(`Completed task #${task.id}: ${task.description}`);
+    return;
+  }
+
+  if (command === "remove") {
+    const removed = removeTask(args[0]);
+
+    if (!removed) {
+      console.error(`Task not found: ${args[0]}`);
+      process.exitCode = 1;
+      return;
+    }
+
+    console.log(`Removed task #${args[0]}`);
+    return;
+  }
   console.error(`Unknown command: ${command}. Run "study --help" for usage.`);
   process.exitCode = 1;
 }

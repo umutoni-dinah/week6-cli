@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-
+const { getQuote } = require("../src/quote");
 const { parseArgs } = require("node:util");
 const {
   addTask,
@@ -20,7 +20,7 @@ Usage:
   study --help
 `;
 
-function main() {
+ async function main() {
   const { values, positionals } = parseArgs({
     options: {
       help: { type: "boolean", short: "h" },
@@ -91,6 +91,17 @@ function main() {
     console.log(`Removed task #${args[0]}`);
     return;
   }
+
+  if (command === "quote") {
+  try {
+    const result = await getQuote();
+    console.log(`"${result.quote}" — ${result.author}`);
+  } catch (error) {
+    console.error(`Could not get a quote: ${error.message}`);
+    process.exitCode = 1;
+  }
+  return;
+}
   console.error(`Unknown command: ${command}. Run "study --help" for usage.`);
   process.exitCode = 1;
 }

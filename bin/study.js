@@ -14,7 +14,7 @@ Study Task Tracker
 Usage:
   study add <description>
   study list
-    study done <id>       Mark a task complete
+  study done <id>       Mark a task complete
   study remove <id>     Remove a task
   study quote           Show a study quote
   study --help
